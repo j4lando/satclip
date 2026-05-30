@@ -6,7 +6,7 @@ trainer:
     init_args:
       save_dir: 'satclip_logs'
       name: 'satclip-seattle'
-      version: '2'
+      version: '3'
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
@@ -26,7 +26,7 @@ model:
   le_type: 'theory'
   frequency_num: 16
   max_radius: 0.09
-  min_radius: 0.001
+  min_radius: 0.0001
   legendre_polys: 32
   sh_embedding_dims: 32
   learning_rate: 0.0001
