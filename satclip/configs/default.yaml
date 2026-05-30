@@ -35,4 +35,5 @@ data:
   batch_size: 512
   num_workers: 8
   val_random_split_fraction: 0.1
+  crop_size: 64
 watchmodel: True
