@@ -7,8 +7,8 @@ import numpy as np
 
 
 def get_train_transform(resize_crop_size = 256,
-                  mean = [0.4139, 0.4341, 0.3482, 0.5263],
-                  std = [0.0010, 0.0010, 0.0013, 0.0013]
+                  mean = [0.02758, 0.03163, 0.02678, 0.0642 ],
+                  std = [0.01754, 0.01855, 0.01973, 0.04098]
                   ):
 
     augmentation = A.Compose(
