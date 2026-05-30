@@ -6,14 +6,16 @@ trainer:
     init_args:
       save_dir: 'satclip_logs'
       name: 'satclip-seattle'
-      version: '1'
+      version: '2'
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
         monitor: "val_loss"
         save_last: True
         filename: "{epoch}-{val_loss:.2f}"
-  max_epochs: 500
+  max_epochs: 50
+  accumulate_grad_batches: 1
+  log_every_n_steps: 5
 model:
   embed_dim: 256
   image_resolution: 64
@@ -32,7 +34,7 @@ model:
   capacity: 256
 data:
   data_dir: /content/drive/MyDrive/PHYS 417/sentinel2_gps_dataset
-  batch_size: 512
+  batch_size: 64
   num_workers: 8
   val_random_split_fraction: 0.1
   crop_size: 64
