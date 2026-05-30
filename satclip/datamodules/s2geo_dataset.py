@@ -12,7 +12,7 @@ import torch
 import lightning.pytorch as pl
 from torch.utils.data import DataLoader
 
-from .transforms import get_pretrained_s2_train_transform, get_s2_train_transform
+from .transforms import get_pretrained_s2_train_transform, get_s2_train_transform, get_train_transform
 
 CHECK_MIN_FILESIZE = 10000 # 10kb
 
@@ -34,7 +34,9 @@ class S2GeoDataModule(pl.LightningDataModule):
         if transform=='pretrained':
             self.train_transform = get_pretrained_s2_train_transform(resize_crop_size=crop_size)
         elif transform=='default':
-            self.train_transform = get_s2_train_transform()
+            self.train_transform = get_s2_train_transform(resize_crop_size=crop_size)
+        elif transform=='normalized':
+            self.train_transform = get_train_transform(resize_crop_size=crop_size)
         else:
             self.train_transform = transform
             

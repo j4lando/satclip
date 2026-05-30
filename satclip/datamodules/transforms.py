@@ -24,7 +24,7 @@ def get_train_transform(resize_crop_size = 256,
     )
 
     def transform(sample):
-        image = sample["image"].numpy().transpose(1,2,0)
+        image = np.asarray(sample["image"]).transpose(1,2,0)
         point = sample["point"]
 
         image = augmentation(image=image)["image"]
