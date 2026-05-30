@@ -87,9 +87,9 @@ class S2Geo(NonGeoDataset):
     validation_filenames = [
         "index.csv",
         "train/train_chip_000000.tif",
-        "train/train_chip_000599.tif",
+        "train/train_chip_000997.tif",
         "test/test_chip_000000.tif",
-        "test/test_chip_000599.tif",
+        "test/test_chip_000997.tif",
     ]
 
     def __init__(
