@@ -13,20 +13,20 @@ trainer:
         monitor: "val_loss"
         save_last: True
         filename: "{epoch}-{val_loss:.2f}"
-  max_epochs: 50
+  max_epochs: 20
   accumulate_grad_batches: 1
   log_every_n_steps: 5
 model:
   embed_dim: 256
   image_resolution: 64
-  vision_layers: 4
-  vision_width: 128
+  vision_layers: [2, 2, 2, 2]
+  vision_width: 64
   vision_patch_size: 8
   in_channels: 4
   le_type: 'theory'
   frequency_num: 16
-  max_radius: 0.001
-  min_radius: 0.000001
+  max_radius: 0.09
+  min_radius: 0.001
   legendre_polys: 32
   sh_embedding_dims: 32
   learning_rate: 0.0001

@@ -6,10 +6,7 @@ from albumentations.pytorch import ToTensorV2
 import numpy as np
 
 
-def get_train_transform(resize_crop_size = 256,
-                  mean = [0.02758, 0.03163, 0.02678, 0.0642 ],
-                  std = [0.01754, 0.01855, 0.01973, 0.04098]
-                  ):
+def get_train_transform(resize_crop_size = 256):
 
     augmentation = A.Compose(
         [
@@ -18,7 +15,6 @@ def get_train_transform(resize_crop_size = 256,
             A.HorizontalFlip(),
             A.VerticalFlip(),
             A.GaussianBlur(),
-            A.Normalize(mean=mean, std=std),
             ToTensorV2(),
         ]
     )
@@ -27,7 +23,11 @@ def get_train_transform(resize_crop_size = 256,
         image = np.asarray(sample["image"]).transpose(1,2,0)
         point = sample["point"]
 
-        image = augmentation(image=image)["image"]
+        image = augmentation(image=image)["image"].float()
+        mean = image.mean(dim=[1, 2], keepdim=True)
+        std = image.std(dim=[1, 2], keepdim=True).clamp(min=1e-6)
+        image = (image - mean) / std
+
         point = coordinate_jitter(point)
 
         return dict(image=image, point=point)
