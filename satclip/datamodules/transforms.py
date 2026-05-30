@@ -13,7 +13,7 @@ def get_train_transform(resize_crop_size = 256,
 
     augmentation = A.Compose(
         [
-            A.RandomResizedCrop(height=resize_crop_size, width=resize_crop_size),
+            A.RandomResizedCrop(size=(resize_crop_size, resize_crop_size)),
             A.RandomBrightnessContrast(),
             A.HorizontalFlip(),
             A.VerticalFlip(),
