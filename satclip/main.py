@@ -112,6 +112,8 @@ class MyLightningCLI(LightningCLI):
 
 
 def cli_main(default_config_filename="./configs/default.yaml"):
+    default_config_filename = str(default_config_filename)
+    print(f"Loading config from: {Path(default_config_filename).resolve()} (exists: {Path(default_config_filename).exists()})")
     save_config_fn = default_config_filename.replace(".yaml", "-latest.yaml")
     # modify configs/default.yaml for learning rate etc.
     cli = MyLightningCLI(
@@ -150,6 +152,6 @@ def cli_main(default_config_filename="./configs/default.yaml"):
 
 
 if __name__ == "__main__":
-    config_fn = "./configs/default.yaml"
+    config_fn = Path(__file__).parent / "configs/default.yaml"
 
     cli_main(config_fn)
