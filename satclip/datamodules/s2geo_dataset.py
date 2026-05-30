@@ -86,9 +86,10 @@ class S2Geo(NonGeoDataset):
 
     validation_filenames = [
         "index.csv",
-        "images/",
-        "images/patch_0.tif",
-        "images/patch_99999.tif",
+        "train/train_chip_000000.tif",
+        "train/train_chip_000599.tif",
+        "test/test_chip_000000.tif",
+        "test/test_chip_000599.tif",
     ]
 
     def __init__(
@@ -118,7 +119,7 @@ class S2Geo(NonGeoDataset):
 
         n_skipped_files = 0
         for i in range(df.shape[0]):
-            filename = os.path.join(self.root, "images", df.iloc[i]["fn"])
+            filename = os.path.join(self.root, df.iloc[i]["fn"])
 
             if os.path.getsize(filename) < CHECK_MIN_FILESIZE:
                 n_skipped_files += 1

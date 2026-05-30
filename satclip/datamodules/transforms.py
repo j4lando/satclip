@@ -43,7 +43,7 @@ def get_s2_train_transform(resize_crop_size = 256):
     ])
 
     def transform(sample):
-        image = sample["image"] / 10000.0
+        image = sample["image"]
         point = sample["point"]
         image = torch.tensor(image)
         image = augmentation(image)
@@ -61,7 +61,7 @@ def get_pretrained_s2_train_transform(resize_crop_size = 256):
     ])
 
     def transform(sample):
-        image = sample["image"] / 10000.0
+        image = sample["image"]
         point = sample["point"]
 
         B10 = np.zeros((1, *image.shape[1:]), dtype=image.dtype)
@@ -78,6 +78,6 @@ def get_pretrained_s2_train_transform(resize_crop_size = 256):
 
 def coordinate_jitter(
         point,
-        radius=0.01 # approximately 1 km
+        radius=0.001 # approximately 100 m
     ):
     return point + torch.rand(point.shape) * radius
