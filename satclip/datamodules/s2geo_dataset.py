@@ -51,10 +51,9 @@ class S2GeoDataModule(pl.LightningDataModule):
         self.save_hyperparameters()
 
     def prepare_data(self) -> None:
-        if not os.path.exists(self.data_dir):
-            print("""
-            No dataset found. To download, please follow instructions on: https://github.com/microsoft/satclip
-            """)
+        for d in [self.train_data_dir, self.val_data_dir]:
+            if not os.path.exists(d):
+                print(f"Directory not found: {d}")
 
     def setup(self, stage="fit"):
         self.train_dataset = S2Geo(root=self.train_data_dir, transform=self.train_transform, mode=self.mode, csv_path=self.train_csv)
