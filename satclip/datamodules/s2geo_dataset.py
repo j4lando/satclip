@@ -90,7 +90,7 @@ class S2Geo(NonGeoDataset):
 
     validation_filenames = [
         "seattle_2km_tile_0001.tif",
-        "seattle_2km_tile_000300.tif",
+        "seattle_2km_tile_0300.tif",
     ]
 
     def __init__(
