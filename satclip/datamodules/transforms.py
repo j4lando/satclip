@@ -76,8 +76,12 @@ def get_pretrained_s2_train_transform(resize_crop_size = 256):
 
     return transform
 
-def coordinate_jitter(
-        point,
-        radius=0.001 # approximately 100 m
-    ):
-    return point + torch.rand(point.shape) * radius
+def coordinate_jitter(point, radius_m=500):
+    lat_rad = torch.deg2rad(point[..., 1])
+    lat_deg = radius_m / 111_320
+    lon_deg = radius_m / (111_320 * torch.cos(lat_rad))
+
+    noise = torch.randn(point.shape)
+    noise[..., 0] *= lon_deg
+    noise[..., 1] *= lat_deg
+    return point + noise

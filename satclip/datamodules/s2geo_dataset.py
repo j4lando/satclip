@@ -20,15 +20,22 @@ class S2GeoDataModule(pl.LightningDataModule):
     def __init__(
         self,
         data_dir: str = "/data/geoclip_s2",
+        train_data_dir: str = None,
+        val_data_dir: str = None,
+        train_csv: str = None,
+        val_csv: str = None,
         batch_size: int = 64,
         num_workers: int = 6,
         crop_size: int = 256,
-        val_random_split_fraction: float = 0.1,
         transform: str = 'pretrained',
         mode: str = "both",
     ):
         super().__init__()
         self.data_dir = data_dir
+        self.train_data_dir = train_data_dir or data_dir
+        self.val_data_dir = val_data_dir or data_dir
+        self.train_csv = train_csv
+        self.val_csv = val_csv
         self.batch_size = batch_size
         self.num_workers = num_workers
         if transform=='pretrained':
@@ -39,8 +46,7 @@ class S2GeoDataModule(pl.LightningDataModule):
             self.train_transform = get_train_transform(resize_crop_size=crop_size)
         else:
             self.train_transform = transform
-            
-        self.val_random_split_fraction = val_random_split_fraction
+
         self.mode = mode
         self.save_hyperparameters()
 
@@ -51,11 +57,8 @@ class S2GeoDataModule(pl.LightningDataModule):
             """)
 
     def setup(self, stage="fit"):
-        dataset = S2Geo(root=self.data_dir, transform=self.train_transform, mode=self.mode)
-
-        N_val = int(len(dataset) * self.val_random_split_fraction)
-        N_train = len(dataset) - N_val
-        self.train_dataset, self.val_dataset = torch.utils.data.random_split(dataset, [N_train, N_val])
+        self.train_dataset = S2Geo(root=self.train_data_dir, transform=self.train_transform, mode=self.mode, csv_path=self.train_csv)
+        self.val_dataset   = S2Geo(root=self.val_data_dir,   transform=self.train_transform, mode=self.mode, csv_path=self.val_csv)
 
     def train_dataloader(self):
         return DataLoader(
@@ -99,12 +102,14 @@ class S2Geo(NonGeoDataset):
         root: str,
         transform: Optional[Callable[[Dict[str, Tensor]], Dict[str, Tensor]]] = None,
         mode: Optional[str] = "both",
+        csv_path: Optional[str] = None,
     ) -> None:
         """Initialize a new S2-100K dataset instance.
         Args:
             root: root directory of S2-100K pre-sampled dataset
             transform: torch transform to apply to a sample
-            mode: which data to return (options are "both" or "points"), useful for embedding locations without loading images 
+            mode: which data to return (options are "both" or "points"), useful for embedding locations without loading images
+            csv_path: path to index CSV; defaults to <root>/index.csv
         """
         assert mode in ["both", "points"]
         self.root = root
@@ -113,9 +118,7 @@ class S2Geo(NonGeoDataset):
         if not self._check_integrity():
             raise RuntimeError("Dataset not found or corrupted.")
 
-        index_fn = "index.csv"
-
-        df = pd.read_csv(os.path.join(self.root, index_fn))
+        df = pd.read_csv(csv_path if csv_path else os.path.join(self.root, "index.csv"))
         self.filenames = []
         self.points = []
 

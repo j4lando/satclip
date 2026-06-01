@@ -5,8 +5,8 @@ trainer:
     class_path: lightning.pytorch.loggers.TensorBoardLogger
     init_args:
       save_dir: 'satclip_logs'
-      name: 'satclip-seattle'
-      version: '3'
+      name: 'satclip-greater-seattle'
+      version: '1'
   callbacks:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
@@ -18,7 +18,7 @@ trainer:
   log_every_n_steps: 5
 model:
   embed_dim: 256
-  image_resolution: 64
+  image_resolution: 256
   vision_layers: [2, 2, 2, 2]
   vision_width: 64
   vision_patch_size: 8
@@ -33,10 +33,13 @@ model:
   num_hidden_layers: 2
   capacity: 256
 data:
-  data_dir: /content/drive/MyDrive/PHYS 417/sentinel2_gps_dataset
+  data_dir: 
+  train_data_dir: /content/drive/MyDrive/PHYS 417/data/sent2_1x1km/train/images
+  val_data_dir: /content/drive/MyDrive/PHYS 417/data/sent2_1x1km/val_test/images
+  train_csv: /content/drive/MyDrive/PHYS 417/data/sent2_1x1km/train/index.csv
+  val_csv: /content/drive/MyDrive/PHYS 417/data/sent2_1x1km/val_test/index_val.csv
   batch_size: 64
   num_workers: 8
-  val_random_split_fraction: 0.1
-  crop_size: 64
+  crop_size: 256
   transform: 'normalized'
 watchmodel: True
