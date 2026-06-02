@@ -292,6 +292,18 @@ class SatCLIP(nn.Module):
             self.visual.requires_grad_(False)
             self.visual.fc.requires_grad_(True)
 
+        elif vision_layers == 'moco_resnet18_4band':
+            print('using pretrained moco resnet18 (13-band weights averaged to 4 bands)')
+            weights = ResNet18_Weights.SENTINEL2_ALL_MOCO
+            self.visual = timm.create_model("resnet18", in_chans=13, num_classes=embed_dim)
+            self.visual.load_state_dict(weights.get_state_dict(progress=True), strict=False)
+            old_weight = self.visual.conv1.weight.data  # [64, 13, 7, 7]
+            new_weight = old_weight.mean(dim=1, keepdim=True).repeat(1, 4, 1, 1)
+            self.visual.conv1 = nn.Conv2d(4, 64, kernel_size=7, stride=2, padding=3, bias=False)
+            self.visual.conv1.weight = nn.Parameter(new_weight)
+            self.visual.requires_grad_(False)
+            self.visual.fc.requires_grad_(True)
+
         elif vision_layers == 'moco_resnet50':
             print('using pretrained moco resnet50')
             weights = ResNet50_Weights.SENTINEL2_ALL_MOCO

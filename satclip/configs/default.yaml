@@ -19,7 +19,7 @@ trainer:
 model:
   embed_dim: 256
   image_resolution: 256
-  vision_layers: [2, 2, 2, 2]
+  vision_layers: 'moco_resnet18_4band'
   vision_width: 64
   vision_patch_size: 8
   in_channels: 4
