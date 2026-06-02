@@ -134,6 +134,13 @@ class S2Geo(NonGeoDataset):
         print(f"skipped {n_skipped_files}/{len(df)} images because they were smaller "
               f"than {CHECK_MIN_FILESIZE} bytes... they probably contained nodata pixels")
 
+        print(f"Caching {len(self.filenames)} images in RAM...")
+        self.cache = []
+        for fn in self.filenames:
+            with rasterio.open(fn) as f:
+                self.cache.append(f.read().astype(np.float32))
+        print("Done caching.")
+
     def __getitem__(self, index: int) -> Dict[str, Tensor]:
         """Return an index within the dataset.
         Args:
@@ -145,10 +152,7 @@ class S2Geo(NonGeoDataset):
         sample = {"point": point}
 
         if self.mode == "both":
-            with rasterio.open(self.filenames[index]) as f:
-                data = f.read().astype(np.float32)
-            #img = torch.tensor(data)
-            sample["image"] = data
+            sample["image"] = self.cache[index]
             
         if self.transform is not None:
             sample = self.transform(sample)
