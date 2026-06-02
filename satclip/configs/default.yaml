@@ -24,9 +24,10 @@ model:
   vision_patch_size: 8
   in_channels: 4
   le_type: 'theory'
+  pe_type: 'siren'
   frequency_num: 16
-  max_radius: 0.09
-  min_radius: 0.0001
+  max_radius: 1.0
+  min_radius: 0.02
   legendre_polys: 32
   sh_embedding_dims: 32
   learning_rate: 0.0001
